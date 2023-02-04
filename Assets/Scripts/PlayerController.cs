@@ -18,11 +18,7 @@ public class PlayerController : MonoBehaviour
     private bool isBound; //判断角色是否被弹回
 
 
-
-    //�������ڵ�����
-    //�����Ҳ��ڵ�����
-    //�����Ұ����˿ո�����ҿ��Կ��Ʒ���
-    //������û�а��¿ո�����Ҳ��ܿ��Ʒ���
+    
 
 
     public int chance;
