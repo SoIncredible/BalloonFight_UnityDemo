@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
+
+    //最后把一些能用代码赋值的变量都用代码赋值
     public LayerMask ground;
-    public float moveSpeed;
-    public float flySpeed;
-    public Animator anim;
+    //之前叫moveSpeed，但是叫加速度更合适一点
+    public float moveAcceleration;
+    public float flyAcceleration;
+    Animator anim;
     Rigidbody2D rb;
     public GameObject foot_coll;
     Collider2D coll;
@@ -15,6 +19,8 @@ public class PlayerController : MonoBehaviour
     public bool isOnGround;
     public float startTime;
     
+    public PhysicsMaterial2D bounce;
+    public PhysicsMaterial2D smooth;
     // 跳跃时间，在一段时间内加速到指定速度
     public float jumpDuration = 1.5f;
     public GameObject Platform;
@@ -24,7 +30,7 @@ public class PlayerController : MonoBehaviour
     public int chance;
     public int perlife;
     public float boundTime = 1.5f;
-
+    public 
     // Start is called before the first frame update
     void Start()
     {
@@ -32,12 +38,8 @@ public class PlayerController : MonoBehaviour
         rb = this.GetComponent<Rigidbody2D>();
         //mass = rb.mass;
         anim = GetComponent<Animator>();
-        Debug.Log(boundTime * Time.deltaTime);
-    }
-    // Update is called once per frame
-    void Update()
-    {
-
+        
+        //Debug.Log(boundTime * Time.deltaTime);
     }
     private void FixedUpdate()
     {
@@ -47,24 +49,16 @@ public class PlayerController : MonoBehaviour
         }
         if (isBound == true)
         {
-            
-            if (Time.time - startTime >= boundTime *Time.deltaTime)
+            if (Time.time - startTime >= boundTime * Time.deltaTime)
             {
-                
-                //Debug.Log(Time.time + " " + startTime);
                 isBound = false;
-                Debug.Log("zg");
             }
-               
         }
         else
         {
             Movement();
-            Debug.Log(rb.velocity.x);
         }
-      
-
-        //temp = Platform.GetComponent<BoxCollider2D>().sharedMaterial.bounciness;
+        temp = rb.velocity.y;
     }
 
 
@@ -73,62 +67,121 @@ public class PlayerController : MonoBehaviour
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
         
-        // if (Input.GetButton("Jump")){
-        //     rb.velocity = new Vector2(rb.velocity.x, flySpeed * Time.deltaTime);
-        // }
 
         // 已解决 BUG：角色在落到平台上的时候按住方向键可以跳跃
         //  已解决BUG：角色卡在平台边上的时候按住空格加方向键会不断抽搐
         if (IsOnGround())
         {
-            Platform.GetComponent<BoxCollider2D>().sharedMaterial.bounciness = 0;
+
+            //更换材质
+            if(Platform.GetComponent<CompositeCollider2D>().sharedMaterial != smooth)
+            {
+                Platform.GetComponent<CompositeCollider2D>().sharedMaterial = smooth;
+            }
+            
             if (horizontal != 0)
             {
-                rb.velocity = new Vector2(horizontal * moveSpeed * Time.deltaTime, 0);
+                if(Mathf.Abs(rb.velocity.x) <= 8)
+                {
+                    
+                    rb.velocity = new Vector2(rb.velocity.x + horizontal * moveAcceleration * Time.deltaTime, 0);
+                    
+                    
+                }
+                else
+                {
+                    rb.velocity = new Vector2(horizontal *8, 0);
+                }
+
+                
             }
             else
             {
-                //人物静止在地面上的时候会平移，暂时不清楚原因，所以我直接暴力把它的velocity全都设置为0
-                rb.velocity = new Vector2(0, 0);
-            }
+                if (rb.velocity.x > 0.1f || rb.velocity.x < -0.1f)
+                {
+                    if (rb.velocity.x > 0)
+                    {
 
-            anim.SetFloat("running", Mathf.Abs(horizontal));
+                        rb.velocity = new Vector2(rb.velocity.x - moveAcceleration * Time.deltaTime, 0);
+                        
+
+                    }
+
+                    else if (rb.velocity.x < 0)
+                    {
+                        rb.velocity = new Vector2(rb.velocity.x + moveAcceleration * Time.deltaTime, 0);
+                        
+                    }
+                }
+                //人物静止在地面上的时候会平移，暂时不清楚原因，所以我直接暴力把它的velocity全都设置为0
+                else
+                {
+                    rb.velocity = new Vector2(0, 0);
+                }
+            }
+            if(rb.velocity.x != 0)
+            {
+                anim.SetBool("running", true);
+            }
+            else
+            {
+                anim.SetBool("running", false);
+            }
+            
             anim.SetBool("onground", true);
+        }
+        else
+        {
+            //更换材质
+            if(Platform.GetComponent<CompositeCollider2D>().sharedMaterial != bounce)
+            {
+                Platform.GetComponent<CompositeCollider2D>().sharedMaterial = bounce;
+            }
         }
         if (Input.GetButton("Jump"))
         {
             anim.SetBool("onground", false);
-            Platform.GetComponent<BoxCollider2D>().sharedMaterial.bounciness = 0.99f;
-            float Ytemp = rb.velocity.y + Time.deltaTime * (flySpeed / jumpDuration);
-
+            float Ytemp;
             // 一个横向的力
-            float Xtemp = rb.velocity.x + horizontal * Time.deltaTime * (moveSpeed / jumpDuration);
-            if (rb.velocity.y > 5)
+            
+            if (rb.velocity.y >= 3.5f)
             {
-                Ytemp = 5;
-
+                Ytemp = 3.5f;
+            }
+            else
+            {
+               Ytemp = rb.velocity.y + Time.deltaTime * flyAcceleration;
             }
             if (horizontal != 0)
             {
                 //在这里写水平加速度
- 
-                rb.velocity = new Vector2(horizontal * Time.deltaTime *moveSpeed, Ytemp);
+
+                //人物静止在地面上的时候会平移，暂时不清楚原因，所以我直接暴力把它的velocity全都设置为0
+
+                if(Mathf.Abs(rb.velocity.x) <= 8)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x + horizontal * moveAcceleration * Time.deltaTime, Ytemp);
+                }
+                else
+                {
+                    rb.velocity = new Vector2(horizontal * 8, 0);
+                }
                 
+
+
+                //rb.velocity = new Vector2(horizontal * Time.deltaTime * moveAcceleration, Ytemp);
             }
             else
             {
                 rb.velocity = new Vector2(rb.velocity.x, Ytemp);
             }
-
-
-            if (body_coll.IsTouchingLayers(ground) && !coll.IsTouchingLayers(ground))
-            {
-                
-                isBound = true;
-                startTime = Time.time;
-            }
         }
-        if(horizontal != 0)
+        if (body_coll.IsTouchingLayers(ground) && !coll.IsTouchingLayers(ground))
+        {
+            isBound = true;
+            startTime = Time.time;
+        }
+        if (horizontal != 0)
         {
             transform.localScale = new Vector3(horizontal, transform.localScale.y, transform.localScale.z);
         }
@@ -141,19 +194,8 @@ public class PlayerController : MonoBehaviour
         {
             screenPoint.x = Screen.width;
         }
-
-        /*
-        if (screenPoint.y > Screen.height)
-        {
-            screenPoint.y = 0;
-        }
-        else if (screenPoint.y < 0)
-        {
-            screenPoint.y = Screen.height;
-        }
-        */
         this.transform.position = Camera.main.ScreenToWorldPoint(screenPoint);
-        //this.transform.Translate(horizontal, 0, vertical);
+        
 
     }
 
