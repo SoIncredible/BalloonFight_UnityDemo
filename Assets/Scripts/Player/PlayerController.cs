@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     public GameObject Platform;
     //用来查看一些变化
     public float temp;
-    public bool isBound;
+    
     public int chance;
     public int perlife;
     public float boundTime = 1.5f;
@@ -103,20 +103,20 @@ public class PlayerController : MonoBehaviour
             if (horizontal != 0)
             {
                 movement = new Vector2(horizontal, 0);
-                if (rb.velocity.x < 0 && horizontal > 0)
+                if (rb.velocity.x <= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 30f);
                 }
-                if (rb.velocity.x > 0 && horizontal < 0)
+                if (rb.velocity.x >= 0 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 30f);
                 }
                 // 加速优化
-                if (rb.velocity.x <= 0 && rb.velocity.x > -8 && horizontal < 0)
+                if (rb.velocity.x <= 0 && rb.velocity.x >= -8 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
-                if (rb.velocity.x <= 8 && rb.velocity.x > 0 && horizontal > 0)
+                if (rb.velocity.x <= 8 && rb.velocity.x >= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
@@ -132,7 +132,7 @@ public class PlayerController : MonoBehaviour
             if (IsOnGround())
             {
 
-
+                movement = new Vector2(horizontal, 0);
                 if (rb.velocity.x <= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 30f);
@@ -142,15 +142,15 @@ public class PlayerController : MonoBehaviour
                     rb.AddForce(movement * speed * 30f);
                 }
                 // 加速优化
-                if (rb.velocity.x <= 0 && rb.velocity.x > -8 && horizontal < 0)
+                if (rb.velocity.x <= 0 && rb.velocity.x >= -8 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
-                if (rb.velocity.x <= 8 && rb.velocity.x > 0 && horizontal > 0)
+                if (rb.velocity.x <= 8 && rb.velocity.x >= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
-                movement = new Vector2(horizontal, 0);
+                
                 
             }
         }
@@ -255,9 +255,6 @@ public class PlayerController : MonoBehaviour
         }
 
     }
-
-
-
     public void GameIsOver()
     {
         bool isover = true;

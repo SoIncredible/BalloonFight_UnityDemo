@@ -102,24 +102,23 @@ public class PlayerController02 : MonoBehaviour
             if (horizontal != 0)
             {
                 movement = new Vector2(horizontal, 0);
-                if (rb.velocity.x < 0 && horizontal > 0)
+                if (rb.velocity.x <= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 30f);
                 }
-                if (rb.velocity.x > 0 && horizontal < 0)
+                if (rb.velocity.x >= 0 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 30f);
                 }
                 // 加速优化
-                if (rb.velocity.x <= 0 && rb.velocity.x > -8 && horizontal < 0)
+                if (rb.velocity.x <= 0 && rb.velocity.x >= -8 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
-                if (rb.velocity.x <= 8 && rb.velocity.x > 0 && horizontal > 0)
+                if (rb.velocity.x <= 8 && rb.velocity.x >= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
-                
 
             }
 
@@ -130,7 +129,7 @@ public class PlayerController02 : MonoBehaviour
             if (IsOnGround())
             {
 
-
+                movement = new Vector2(horizontal, 0);
                 if (rb.velocity.x <= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 30f);
@@ -140,15 +139,16 @@ public class PlayerController02 : MonoBehaviour
                     rb.AddForce(movement * speed * 30f);
                 }
                 // 加速优化
-                if (rb.velocity.x <= 0 && rb.velocity.x > -8 && horizontal < 0)
+                if (rb.velocity.x <= 0 && rb.velocity.x >= -8 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
-                if (rb.velocity.x <= 8 && rb.velocity.x > 0 && horizontal > 0)
+                if (rb.velocity.x <= 8 && rb.velocity.x >= 0 && horizontal > 0)
                 {
                     rb.AddForce(movement * speed * 20f);
                 }
-                movement = new Vector2(horizontal, 0);
+                
+
 
             }
         }
