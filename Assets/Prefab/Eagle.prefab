@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 4665050789636043540}
   - component: {fileID: 4665050789636043547}
   - component: {fileID: 4665050789636043546}
-  - component: {fileID: 4665050789636043545}
+  - component: {fileID: 1399407173}
   m_Layer: 7
   m_Name: Eagle
   m_TagString: Enemy
@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e788575fe349fe46a7d35e61b88e9fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Speed: 1
+  Speed: 0
   TopY: 0
   BottomY: 0
   top: {fileID: 4665050791098185173}
@@ -167,7 +167,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4665050789636043543}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -180,7 +180,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 5
---- !u!61 &4665050789636043545
+--- !u!61 &1399407173
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,7 +189,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 4665050789636043543}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: e5a3a1b604621764da1ce2008230ee9e, type: 2}
+  m_Material: {fileID: 6200000, guid: 39683d68864ed894aabd160f53278a8e, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

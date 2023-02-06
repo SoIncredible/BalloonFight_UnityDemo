@@ -15,6 +15,7 @@ public class EnemyController : MonoBehaviour
     private bool isUP;
     public Transform top, bottom;
     public Animator anim;
+    public bool isGUard;
     private void Start()
     {
 
@@ -28,29 +29,33 @@ public class EnemyController : MonoBehaviour
         Destroy(bottom.gameObject);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Movement();
     }
     void Movement()
     {
-        if (isUP)
+        if (!isGUard)
         {
-            rb.velocity = new Vector2(rb.velocity.x, Speed);
-            if(transform.position.y > TopY)
+            if (isUP)
             {
-                isUP = false;
-            }
+                transform.position += new Vector3(0, 0.05f, 0);
+                if (transform.position.y >= TopY)
+                {
+                    isUP = false;
+                }
 
-        }
-        else
-        {
-            rb.velocity = new Vector2(rb.velocity.x, -Speed);
-            if(transform.position.y < BottomY)
+            }
+            else
             {
-                isUP = true;
+                transform.position += new Vector3(0, -0.05f, 0);
+                if (transform.position.y <= BottomY)
+                {
+                    isUP = true;
+                }
             }
         }
+        
     }
     void Death()
     {

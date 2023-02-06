@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-public class PlayerController : MonoBehaviour
+public class PlayerController02 : MonoBehaviour
 {
 
 
-    //æœ€åæŠŠä¸€äº›èƒ½ç”¨ä»£ç èµ‹å€¼çš„å˜é‡éƒ½ç”¨ä»£ç èµ‹å€¼
+    //×îºó°ÑÒ»Ğ©ÄÜÓÃ´úÂë¸³ÖµµÄ±äÁ¿¶¼ÓÃ´úÂë¸³Öµ
     public LayerMask ground;
-    //ä¹‹å‰å«moveSpeedï¼Œä½†æ˜¯å«åŠ é€Ÿåº¦æ›´åˆé€‚ä¸€ç‚¹
+    //Ö®Ç°½ĞmoveSpeed£¬µ«ÊÇ½Ğ¼ÓËÙ¶È¸üºÏÊÊÒ»µã
     public float moveAcceleration;
     public float flyAcceleration;
     Animator anim;
     Rigidbody2D rb;
-    public float speed;
     public GameObject foot_coll;
     Collider2D coll;
     public Collider2D body_coll;
@@ -23,10 +22,10 @@ public class PlayerController : MonoBehaviour
     public int EnemyNum = 3;
     public PhysicsMaterial2D bounce;
     public PhysicsMaterial2D smooth;
-    // è·³è·ƒæ—¶é—´ï¼Œåœ¨ä¸€æ®µæ—¶é—´å†…åŠ é€Ÿåˆ°æŒ‡å®šé€Ÿåº¦
+    // ÌøÔ¾Ê±¼ä£¬ÔÚÒ»¶ÎÊ±¼äÄÚ¼ÓËÙµ½Ö¸¶¨ËÙ¶È
     public float jumpDuration = 1.5f;
     public GameObject Platform;
-    //ç”¨æ¥æŸ¥çœ‹ä¸€äº›å˜åŒ–
+    //ÓÃÀ´²é¿´Ò»Ğ©±ä»¯
     public float temp;
     public bool isBound;
     public int chance;
@@ -39,10 +38,10 @@ public class PlayerController : MonoBehaviour
     TMP_Text ChanceText;
     TMP_Text LifeText;
     Vector2 point;
-    Vector2 movement;
     private bool isDead;
-    public float moveForce;
-
+    public GameObject random;
+    public float speed;
+    public Vector2 movement;
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +54,7 @@ public class PlayerController : MonoBehaviour
         chance = 2;
         point = transform.position;
         score = 0;
-        
+
         //Debug.Log(boundTime * Time.deltaTime);
     }
     private void FixedUpdate()
@@ -65,7 +64,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Time.time - startTime >= boundTime * Time.deltaTime)
             {
-                
+
                 isDead = false;
                 isHurt = false;
             }
@@ -78,7 +77,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    // åŸç‰ˆæ¸¸æˆä¸­è§’è‰²åœ¨ç©ºä¸­æ—¶åªè¦æœ‰ä¸€ä¸ªåˆé€Ÿåº¦ï¼Œé‚£ä¹ˆæ°´å¹³æ–¹å‘çš„é€Ÿåº¦å°±ä¿æŒä¸å˜äº†
+    // Ô­°æÓÎÏ·ÖĞ½ÇÉ«ÔÚ¿ÕÖĞÊ±Ö»ÒªÓĞÒ»¸ö³õËÙ¶È£¬ÄÇÃ´Ë®Æ½·½ÏòµÄËÙ¶È¾Í±£³Ö²»±äÁË
     private void Movement()
     {
         float horizontal = Input.GetAxisRaw("Horizontal");
@@ -111,7 +110,7 @@ public class PlayerController : MonoBehaviour
                 {
                     rb.AddForce(movement * speed * 30f);
                 }
-                // åŠ é€Ÿä¼˜åŒ–
+                // ¼ÓËÙÓÅ»¯
                 if (rb.velocity.x <= 0 && rb.velocity.x > -8 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 20f);
@@ -123,7 +122,6 @@ public class PlayerController : MonoBehaviour
                 
 
             }
-
 
 
         }
@@ -141,7 +139,7 @@ public class PlayerController : MonoBehaviour
                 {
                     rb.AddForce(movement * speed * 30f);
                 }
-                // åŠ é€Ÿä¼˜åŒ–
+                // ¼ÓËÙÓÅ»¯
                 if (rb.velocity.x <= 0 && rb.velocity.x > -8 && horizontal < 0)
                 {
                     rb.AddForce(movement * speed * 20f);
@@ -151,13 +149,13 @@ public class PlayerController : MonoBehaviour
                     rb.AddForce(movement * speed * 20f);
                 }
                 movement = new Vector2(horizontal, 0);
-                
+
             }
         }
-        // å·²è§£å†³ BUGï¼šè§’è‰²åœ¨è½åˆ°å¹³å°ä¸Šçš„æ—¶å€™æŒ‰ä½æ–¹å‘é”®å¯ä»¥è·³è·ƒ
-        //  å·²è§£å†³BUGï¼šè§’è‰²å¡åœ¨å¹³å°è¾¹ä¸Šçš„æ—¶å€™æŒ‰ä½ç©ºæ ¼åŠ æ–¹å‘é”®ä¼šä¸æ–­æŠ½æ
-      
-        
+        // ÒÑ½â¾ö BUG£º½ÇÉ«ÔÚÂäµ½Æ½Ì¨ÉÏµÄÊ±ºò°´×¡·½Ïò¼ü¿ÉÒÔÌøÔ¾
+        //  ÒÑ½â¾öBUG£º½ÇÉ«¿¨ÔÚÆ½Ì¨±ßÉÏµÄÊ±ºò°´×¡¿Õ¸ñ¼Ó·½Ïò¼ü»á²»¶Ï³é´¤
+
+
         if (horizontal != 0)
         {
             transform.localScale = new Vector3(horizontal, transform.localScale.y, transform.localScale.z);
@@ -176,7 +174,8 @@ public class PlayerController : MonoBehaviour
 
     public bool IsOnGround()
     {
-        if(coll.IsTouchingLayers(ground)){
+        if (coll.IsTouchingLayers(ground))
+        {
             Platform.GetComponent<CompositeCollider2D>().sharedMaterial = smooth;
             anim.SetBool("onground", true);
             return true;
@@ -189,98 +188,48 @@ public class PlayerController : MonoBehaviour
             return false;
         }
     }
-    //åšä¸€ä¸ªåå¼¹çš„æ•ˆæœ
+    //×öÒ»¸ö·´µ¯µÄĞ§¹û
     //
-    //ç©å®¶è¸©åˆ°æ•Œäººæˆ–è€…ç¢°åˆ°å¢™å£éƒ½è¦åˆ¤å®šæœç€åˆé€Ÿåº¦çš„æ–¹å‘åå‘åå¼¹
-
-    // æˆ‘å¦‚æœä¹Ÿç»™è¿™äº›æ•ŒäººåŠ ä¸Šå’Œå¹³å°ä¸€æ ·çš„ç‰©ç†æè´¨æ˜¯ä¸æ˜¯å°±å¯ä»¥äº†ï¼Ÿ
-    public void OnCollisionEnter2D(Collision2D collision)
-    {
-        
-        if (collision.gameObject.tag == "Enemy")
-        {
-           if(collision.gameObject.transform.position.y < transform.position.y)
-            {
-                EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
-
-                
-                enemy.JumpOn();
-                //collision.gameObject.SetActive(false);
-                //æ¶ˆç­æ•Œäºº
-                //rb.velocity = new Vector2(0,8);
-                ScoreText = gameOver.transform.GetChild(0).GetComponent<TMP_Text>();
-                score += 500;
-                ScoreText.text = "Score:" + score.ToString();
-
-            }
-            else
-            {
-                //
-                isHurt = true;
-                startTime = Time.time;
-                if(perlife > 1)
-                {
-                    perlife--;
-                    LifeText = gameOver.transform.GetChild(1).GetComponent<TMP_Text>();
-                    LifeText.text = "Life:" + perlife.ToString();
-                }
-                else
-                {
-                    if(chance > 0)
-                    {
-                        transform.position = point;
-                        isDead = true;
-                        startTime = Time.time;
-                        rb.velocity = new Vector2(0, 0);
-                        chance--;
-                        perlife = 2;
-                        ChanceText = gameOver.transform.GetChild(2).GetComponent<TMP_Text>();
-                        ChanceText.text = "Chance:" + chance.ToString();
-                        LifeText = gameOver.transform.GetChild(1).GetComponent<TMP_Text>();
-                        LifeText.text = "Life:" + perlife.ToString();
-
-                        
-                    }
-                    else
-                    {
-                        Time.timeScale = 0;
-                        gameOver.transform.GetChild(4).gameObject.SetActive(true);
-                        LifeText.text = "Life:0";
-                        //å¼¹å‡ºä¸€ä¸ªçª—å£ï¼Œè¿”å›ä¸»èœå•
-                        //æ¸¸æˆç»“æŸ
-                    }
-                }
-                
-            }
-        }
-
-    }
-
 
 
     public void GameIsOver()
     {
+        
         bool isover = true;
         var obj = FindObjectsOfType(typeof(GameObject)) as GameObject[];
-        foreach (GameObject child in obj)
+        if (random.GetComponent<RandomGenerate>().count <= 1)
         {
-            if (child.gameObject.CompareTag("Enemy"))
+            foreach (GameObject child in obj)
             {
-                //
-                isover = false;
-                break;
-            }
-            
-            
-            //æš‚åœæ¸¸æˆ
+                if (child.gameObject.CompareTag("Balloon"))
+                {
+                    //
+                    isover = false;
+                    break;
+                }
 
+
+                //ÔİÍ£ÓÎÏ·
+
+            }
+            if (isover)
+            {
+                gameOver.transform.GetChild(5).gameObject.SetActive(true);
+                gameOver.transform.GetChild(5).gameObject.GetComponent<TMP_Text>().text = "Your Score:" + score.ToString();
+                gameOver.transform.GetChild(3).gameObject.SetActive(true);
+                Time.timeScale = 0;
+            }
         }
-        if (isover)
+    }
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Balloon")
         {
-            gameOver.transform.GetChild(3).gameObject.SetActive(true);
-            Time.timeScale = 0;
+            Destroy(collision.gameObject);
+            ScoreText = gameOver.transform.GetChild(0).GetComponent<TMP_Text>();
+            score += 500;
+            ScoreText.text = "Score:" + score.ToString();
         }
-       
     }
 
 }
